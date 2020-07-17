@@ -1,0 +1,223 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <locale.h>
+
+#define BSIZE 1000
+
+typedef struct registro {
+    char regiao[20];
+	char estado[20];
+	char municipio[20];
+	int coduf;
+	int codmun;
+	int codregiaosaude;
+	char nomeregiaosaude[20];
+	time_t data1;
+	int semanaepi;
+	int populacaotcu2019;
+	int casosacumulado;
+	int casosnovos;
+	int obitosacumulado;
+	int obitosnovos;
+	int recuperadosnovos;
+	int emacompanhamentonovos;
+	int interiormetropolitana;
+}Registro;
+
+typedef struct no {
+    struct registro data;
+    struct no *prox;
+	struct no *atual;
+	struct no *topo;
+}No;
+
+No  c;
+No *p;
+
+void imprimaCabeca (No *le) {
+   No *p;
+   for (p = le->prox; p != NULL; p = p->prox)
+     printf("%c\n", p->data.regiao);
+	 printf("%c\n", p->data.estado);
+     printf("%c\n", p->data.municipio);
+	 printf("%d\n", p->data.coduf);
+	 printf("%d\n", p->data.codmun);
+	 printf("%d\n", p->data.codregiaosaude);
+	 printf("%c\n", p->data.nomeregiaosaude);
+	 printf("%d\n", p->data.data1);
+	 printf("%d\n", p->data.semanaepi);
+	 printf("%d\n", p->data.populacaotcu2019);
+	 printf("%d\n", p->data.casosacumulado);
+	 printf("%d\n", p->data.casosnovos);
+	 printf("%d\n", p->data.obitosacumulado);
+	 printf("%d\n", p->data.obitosnovos);
+	 printf("%d\n", p->data.recuperadosnovos);
+	 printf("%d\n", p->data.emacompanhamentonovos);
+	 printf("%d\n", p->data.interiormetropolitana);
+}
+
+//Função de troca de lugar de registro no array 
+void troca(struct registro* a, struct registro* b) {
+	struct registro tmp;
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+
+//ordenação insertionSort
+int insertionSort(No *le)
+{
+	// nenhum elemneto na lista
+    if(le  == NULL || le->prox == NULL)
+        return le;
+	
+    // topo é o primeiro elemento da lista a ser ordenado
+    while(le != NULL) {
+
+        le = le->prox;
+        if(topo == NULL || atual->data.regiao < topo->data.regiao) {
+            // insere o topo na lista ordenada
+            // ou o primeiro elemento dentro da lista ordenada vazia
+            troca(atual->prox = topo;
+            topo = atual;
+        } else {
+            // insere o elemento atual dentro da posiçao nao vazia da lista
+            No lista *p = topo;
+            while(p != NULL) {
+                if(p->prox == NULL || // ultimo elemento da lista ordenada
+                   atual->data.regiao < p->prox->data.regiao) // meio da lista
+                {
+                    // insere no meio da lista ordenada ou como ultimo elemento
+                    atual->prox = p->prox;
+                    p->prox = atual;
+                    break; 
+                }
+                p = p->prox;
+            }
+        }
+    }
+    return topo;
+}
+
+int main (void) {
+
+    setlocale(LC_ALL, "Portuguese");
+	char filename[] = "HIST_PAINEL_COVIDBR_15jul2020 - csv.csv";
+    FILE *fp = fopen(filename, "r");
+
+    No *le;
+    le = malloc (sizeof (No));
+    le->prox = NULL;
+    printf ("sizeof (node) = %d\n", sizeof (le));
+
+    if (fp == NULL){
+        printf("Não é possível abrir o arquivo %s",
+               filename);
+        exit(1);
+    }
+	
+	int qtdDS = 0;
+
+    char parsedLine[BSIZE];
+    char *field;
+    while (fgets(parsedLine, BSIZE, filename) != NULL){
+        No *nova;
+        nova = malloc (sizeof (No));
+
+        char *reg = strtok(parsedLine, ",");              
+        strcpy(nova->data.regiao, reg); 
+		
+        char *est = strtok(parsedLine, ",");
+        strcpy(nova->data.estado, est);
+		
+        char *mun = strtok(parsedLine, ",");
+        strcpy(nova->data.municipio, mun);
+		
+		field = strtok(parsedLine, ",");                   
+        int cuf=atoi(field);                               
+        nova->data.coduf = cuf;
+		
+		field = strtok(parsedLine, ",");
+        int cmu=atoi(field);
+        nova->data.codmun = cmu;
+		
+		field = strtok(parsedLine, ",");
+        int crs=atoi(field);
+        nova->data.codregiaosaude = crs;
+		
+		char *nrs = strtok(parsedLine, ",");
+        strcpy(nova->data.nomeregiaosaude, nrs);
+		
+		field = strtok(parsedLine, ",");
+        time_t dat=ctime(field);
+        nova->data.data1 = dat;
+		
+		field = strtok(parsedLine, ",");
+        int sep=atoi(field);
+        nova->data.semanaepi = sep;
+		
+		field = strtok(parsedLine, ",");
+        int pt2=atoi(field);
+        nova->data.populacaotcu2019 = pt2;
+		
+		field = strtok(parsedLine, ",");
+        int cam=atoi(field);
+        nova->data.casosacumulado = cam;
+		
+		field = strtok(parsedLine, ",");
+        int cnv=atoi(field);
+        nova->data.casosnovos = cnv;
+		
+		field = strtok(parsedLine, ",");
+        int oam=atoi(field);
+        nova->data.obitosacumulado = oam;
+		
+		field = strtok(parsedLine, ",");
+        int onv=atoi(field);
+        nova->data.obitosnovos = onv;
+		
+		field = strtok(parsedLine, ",");
+        int rnv=atoi(field);
+        nova->data.recuperadosnovos = rnv;
+		
+		field = strtok(parsedLine, ",");
+        int ean=atoi(field);
+        nova->data.emacompanhamentonovos = ean;
+		
+		field = strtok(parsedLine, ",");
+        int ime=atoi(field);
+        nova->data.interiormetropolitana = ime;
+		
+
+        nova->prox = le;
+        le = nova;
+
+        printf("%s:\n", nova->data.regiao);
+		printf("%s:\n", nova->data.estado);
+		printf("%s:\n", nova->data.municipio);
+		printf("%s:\n", nova->data.coduf);
+		printf("%s:\n", nova->data.codmun);
+		printf("%s:\n", nova->data.codregiaosaude);
+		printf("%s:\n", nova->data.nomeregiaosaude);
+		printf("%s:\n", nova->data.data1);
+		printf("%s:\n", nova->data.semanaepi);
+		printf("%s:\n", nova->data.populacaotcu2019);
+		printf("%s:\n", nova->data.casosacumulado);
+		printf("%s:\n", nova->data.casosnovos);
+		printf("%s:\n", nova->data.obitosacumulado);
+		printf("%s:\n", nova->data.obitosnovos);
+		printf("%s:\n", nova->data.recuperadosnovos);
+		printf("%s:\n", nova->data.emacompanhamentonovos);
+		printf("%s:\n", nova->data.interiormetropolitana);
+		
+		qtdDS++; 
+
+
+    }
+
+    fclose(fp);
+
+    return 1;
+}
