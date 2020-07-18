@@ -22,8 +22,8 @@ typedef struct person person;
 
 //return true if person a should be listed before person b
 int compare_person(person *a, person *b) {
-    printf("comparing %s and %s (%d)\n", a->name, b->name, a->age < b->age);
-    return a->age < b->age;
+    printf("comparing %s and %s (%d)\n", a->name, b->name, strcmp(a->name, b->name));
+    return strcmp(a->name, b->name) < 0;
 }
 
 void add_to_list(linked_list *list, person *data) {
